@@ -1,5 +1,5 @@
-title: UM Tesorería MercadoPago Service
-description: Documentación del servicio de MercadoPago para UM Tesorería
+title: Lander Echavarria Pagina
+description: Documentación de mi pagina lander
 theme: jekyll-theme-cayman
 
 # Configuración importante para Jekyll

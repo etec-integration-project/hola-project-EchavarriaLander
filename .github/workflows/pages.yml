@@ -1,37 +1,21 @@
-name: Lander Echavarria Service Documentation
+name: Deploy GitHub Pages
 
 on:
-  schedule:
-    - cron: '0 0 * * *'  # Corre diariamente
-  workflow_dispatch:      # Permite ejecutar manualmente
   push:
-    branches: [ "main" ]  # Solo en la rama principal
-  issues:
-    types: [opened, closed, edited, deleted]
-  milestone:
-    types: [created, closed, edited, deleted]
+    branches: [ "main" ]  # Se ejecuta cuando hay cambios en main
+  workflow_dispatch:      # Permite ejecución manual
 
-# Corregimos la sintaxis de los permisos
 permissions:
-  contents: write    # Para repo y wiki
-  pages: write      # Para GitHub Pages
-  id-token: write   # Para autenticación
-  issues: read          # Para leer issues
-  pull-requests: write  # Para PR y merge
-  repository-projects: write
-  actions: read         # Para acceder a las acciones
-  deployments: write    # Para despliegues
-  statuses: write       # Para actualizar estados
-
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build:
-    name: Build MercadoPago Documentation
+    name: Build Documentation
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout MercadoPago Service
+      - name: Checkout Repository
         uses: actions/checkout@v4
       
       - name: Set up Python
@@ -44,19 +28,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install PyGithub markdown2 jinja2 requests
 
-      - name: Fetch MercadoPago Service Issues and Milestones
+      - name: Fetch Issues and Milestones
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python scripts/fetch_github_data.py
 
-      - name: Generate MercadoPago Documentation
+      - name: Generate Documentation
         run: |
           python scripts/generate_docs.py
 
-      - name: Generate MercadoPago Wiki
+      - name: Generate Wiki
         env:
-          GITHUB_TOKEN: ${{ secrets.WIKI_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -77,13 +61,13 @@ jobs:
           path: ./_site
       
   deploy:
-    name: Deploy MercadoPago Documentation
+    name: Deploy Documentation
     needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy MercadoPago Documentation to GitHub Pages
+      - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 
+        uses: actions/deploy-pages@v4  
