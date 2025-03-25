@@ -1,0 +1,20 @@
+title: Lander Echavarria Pagina
+description: Documentación de mi pagina lander
+theme: jekyll-theme-cayman
+
+# Configuración importante para Jekyll
+defaults:
+  -
+    scope:
+      path: "" # aplica a todos los archivos
+    values:
+      layout: default
+
+# Especificar que los archivos .md deben ser procesados
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Configurar la página principal
+index_page: index.md 
